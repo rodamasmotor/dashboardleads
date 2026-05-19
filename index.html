@@ -1,409 +1,853 @@
 <!DOCTYPE html>
+
 <html lang="id">
+
 <head>
+
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Dashboard Leads Roda Mas Motor</title>
+
     <script src="https://cdn.tailwindcss.com"></script>
+
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <script>
+
         tailwind.config = {
+
             theme: {
+
                 extend: {
+
                     colors: {
+
                         hondaRed: '#CC0000',
+
                         hondaDark: '#8B0000',
+
                         ahassBlue: '#1D4ED8'
+
                     }
+
                 }
+
             }
+
         }
+
     </script>
+
 </head>
+
 <body class="bg-gray-100 min-h-screen p-4 md:p-8 font-sans">
+
+
 
     <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6">
 
+
+
         <div class="md:col-span-1 bg-white rounded-2xl shadow-xl overflow-hidden h-fit border border-gray-200">
+
             <div class="bg-hondaRed p-5 text-center">
+
                 <h1 class="text-white text-xl font-bold tracking-wide">INPUT LEADS</h1>
+
                 <p class="text-red-100 text-xs">Roda Mas Motor</p>
+
             </div>
+
+
 
             <div class="flex border-b text-sm">
+
                 <button onclick="switchTab('h1')" id="tab-h1" class="flex-1 py-3 font-bold text-hondaRed border-b-4 border-hondaRed bg-red-50 transition-all focus:outline-none">
+
                     <i class="fas fa-motorcycle mr-1"></i>H1 (Sales)
+
                 </button>
+
                 <button onclick="switchTab('h2')" id="tab-h2" class="flex-1 py-3 font-bold text-gray-400 border-b-4 border-transparent hover:bg-gray-50 transition-all focus:outline-none">
+
                     <i class="fas fa-tools mr-1"></i>H2 (Bengkel)
+
                 </button>
+
             </div>
+
+
 
             <div class="p-5">
+
                 
+
                 <form id="form-h1" class="space-y-4 block">
-                    <div>
-                        <label class="block text-xs font-semibold text-gray-600 mb-1">Nama Calon Pembeli</label>
-                        <input type="text" id="h1-name" required class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-hondaRed focus:border-hondaRed outline-none transition-colors" placeholder="Cth: Budi Santoso">
+
+                    <div class="grid grid-cols-2 gap-3">
+
+                        <div>
+
+                            <label class="block text-xs font-semibold text-gray-600 mb-1">Nama Calon Pembeli</label>
+
+                            <input type="text" id="h1-name" required class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-hondaRed focus:border-hondaRed outline-none transition-colors" placeholder="Cth: Budi Santoso">
+
+                        </div>
+
+                        <div>
+
+                            <label class="block text-xs font-semibold text-gray-600 mb-1">Tgl Masuk Leads</label>
+
+                            <input type="date" id="h1-date" required class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-hondaRed outline-none text-gray-700">
+
+                        </div>
+
                     </div>
+
                     <div>
+
                         <label class="block text-xs font-semibold text-gray-600 mb-1">Nama (Sales Follow Up)</label>
+
                         <input type="text" id="h1-sales" required class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-hondaRed focus:border-hondaRed outline-none transition-colors" placeholder="Cth: Ahmad Sales">
+
                     </div>
+
                     <div>
+
                         <label class="block text-xs font-semibold text-gray-600 mb-1">No. WhatsApp</label>
+
                         <input type="tel" id="h1-wa" required class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-hondaRed focus:border-hondaRed outline-none transition-colors" placeholder="0812...">
+
                     </div>
+
                     <div>
+
                         <label class="block text-xs font-semibold text-gray-600 mb-1">Minat Tipe Motor</label>
+
                         <input type="text" id="h1-type" required class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-hondaRed focus:border-hondaRed outline-none transition-colors" placeholder="Cth: Scoopy Prestige Putih">
+
                     </div>
+
                     <div>
+
                         <label class="block text-xs font-semibold text-gray-600 mb-1">Sumber Traffic</label>
+
                         <select id="h1-source" required class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-hondaRed outline-none bg-white">
+
                             <option value="Instagram">Instagram</option>
+
                             <option value="Facebook">Facebook</option>
-                            <option value="TikTok">TikTok</option>
+
+                            <option value="TikTok">TikTok / WA Organik</option>
+
                         </select>
+
                     </div>
+
                     <button type="submit" class="w-full bg-hondaRed hover:bg-hondaDark text-white font-bold py-2.5 rounded-md shadow-md hover:shadow-lg transition-all text-sm mt-2">
+
                         <i class="fas fa-save mr-2"></i>Simpan Data H1
+
                     </button>
+
                 </form>
+
+
 
                 <form id="form-h2" class="space-y-4 hidden">
-                    <div>
-                        <label class="block text-xs font-semibold text-gray-600 mb-1">Nama Pelanggan Servis</label>
-                        <input type="text" id="h2-name" required class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-ahassBlue focus:border-ahassBlue outline-none transition-colors" placeholder="Cth: Andi Motor Beat">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-gray-600 mb-1">Nama (Admin Follow Up)</label>
-                        <input type="text" id="h2-admin" required class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-ahassBlue focus:border-ahassBlue outline-none transition-colors" placeholder="Cth: Siti Admin">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-gray-600 mb-1">No. WhatsApp</label>
-                        <input type="tel" id="h2-wa" required class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-ahassBlue focus:border-ahassBlue outline-none transition-colors" placeholder="0812...">
-                    </div>
+
                     <div class="grid grid-cols-2 gap-3">
+
                         <div>
-                            <label class="block text-xs font-semibold text-gray-600 mb-1">Plat Nomor</label>
-                            <input type="text" id="h2-plat" required class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-ahassBlue outline-none uppercase" placeholder="DK 1234 XY">
+
+                            <label class="block text-xs font-semibold text-gray-600 mb-1">Nama Pelanggan Servis</label>
+
+                            <input type="text" id="h2-name" required class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-ahassBlue focus:border-ahassBlue outline-none transition-colors" placeholder="Cth: Andi Motor Beat">
+
                         </div>
+
                         <div>
-                            <label class="block text-xs font-semibold text-gray-600 mb-1">Tgl Booking</label>
+
+                            <label class="block text-xs font-semibold text-gray-600 mb-1">Tgl Masuk Leads</label>
+
                             <input type="date" id="h2-date" required class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-ahassBlue outline-none text-gray-700">
+
                         </div>
+
                     </div>
+
                     <div>
-                        <label class="block text-xs font-semibold text-gray-600 mb-1">Keluhan / Jenis Servis</label>
-                        <input type="text" id="h2-service" required class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-ahassBlue focus:border-ahassBlue outline-none transition-colors" placeholder="Cth: Servis Rutin + Ganti V-Belt">
+
+                        <label class="block text-xs font-semibold text-gray-600 mb-1">Nama (Admin Follow Up)</label>
+
+                        <input type="text" id="h2-admin" required class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-ahassBlue focus:border-ahassBlue outline-none transition-colors" placeholder="Cth: Siti Admin">
+
                     </div>
+
                     <div>
+
+                        <label class="block text-xs font-semibold text-gray-600 mb-1">No. WhatsApp</label>
+
+                        <input type="tel" id="h2-wa" required class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-ahassBlue focus:border-ahassBlue outline-none transition-colors" placeholder="0812...">
+
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3">
+
+                        <div>
+
+                            <label class="block text-xs font-semibold text-gray-600 mb-1">Plat Nomor</label>
+
+                            <input type="text" id="h2-plat" required class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-ahassBlue outline-none uppercase" placeholder="DK 1234 XY">
+
+                        </div>
+
+                        <div>
+
+                            <label class="block text-xs font-semibold text-gray-600 mb-1">Keluhan / Jenis Servis</label>
+
+                            <input type="text" id="h2-service" required class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-ahassBlue focus:border-ahassBlue outline-none transition-colors" placeholder="Cth: Servis Rutin + Ganti V-Belt">
+
+                        </div>
+
+                    </div>
+
+                    <div>
+
                         <label class="block text-xs font-semibold text-gray-600 mb-1">Sumber Traffic</label>
+
                         <select id="h2-source" required class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-ahassBlue outline-none bg-white">
+
                             <option value="Instagram">Instagram</option>
+
                             <option value="Facebook">Facebook</option>
-                            <option value="TikTok">TikTok</option>
+
+                            <option value="TikTok">TikTok / WA Organik</option>
+
                         </select>
+
                     </div>
+
                     <button type="submit" class="w-full bg-ahassBlue hover:bg-blue-800 text-white font-bold py-2.5 rounded-md shadow-md hover:shadow-lg transition-all text-sm mt-2">
+
                         <i class="fas fa-save mr-2"></i>Catat Booking H2
+
                     </button>
+
                 </form>
+
             </div>
+
         </div>
+
+
 
         <div class="md:col-span-2 space-y-6">
+
             
+
             <div class="grid grid-cols-2 gap-4">
+
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center justify-between relative overflow-hidden">
+
                     <div class="absolute w-2 h-full bg-hondaRed left-0 top-0"></div>
+
                     <div class="pl-2">
+
                         <p class="text-xs text-gray-500 font-bold uppercase tracking-wider mb-1">Total Leads H1</p>
+
                         <h2 class="text-4xl font-black text-gray-800" id="count-h1">0</h2>
+
                     </div>
+
                     <div class="text-hondaRed opacity-10 text-6xl absolute right-4"><i class="fas fa-motorcycle"></i></div>
+
                 </div>
+
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center justify-between relative overflow-hidden">
+
                     <div class="absolute w-2 h-full bg-ahassBlue left-0 top-0"></div>
+
                     <div class="pl-2">
+
                         <p class="text-xs text-gray-500 font-bold uppercase tracking-wider mb-1">Total Booking H2</p>
+
                         <h2 class="text-4xl font-black text-gray-800" id="count-h2">0</h2>
+
                     </div>
+
                     <div class="text-ahassBlue opacity-10 text-6xl absolute right-4"><i class="fas fa-tools"></i></div>
+
                 </div>
+
             </div>
+
+
 
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+
                 <div class="flex justify-between items-center mb-6">
+
                     <h3 class="text-lg font-bold text-gray-800">Performa Sumber Traffic Sosmed</h3>
+
                     <span class="text-xs font-semibold text-green-600 bg-green-100 px-3 py-1 rounded-full"><i class="fas fa-circle text-[8px] mr-1"></i>Live Data</span>
+
                 </div>
+
                 <div class="relative h-64 w-full">
+
                     <canvas id="trafficChart"></canvas>
+
                 </div>
+
             </div>
+
+
 
             <div class="bg-white border-l-4 border-yellow-400 p-4 rounded-lg shadow-sm flex items-center">
+
                 <div class="bg-yellow-100 rounded-full p-2 mr-4">
+
                     <i class="fas fa-bell text-yellow-600"></i>
+
                 </div>
+
                 <div>
+
                     <p class="text-sm font-bold text-gray-800">Aktivitas Terakhir</p>
+
                     <p class="text-xs text-gray-500" id="last-activity">Menunggu input data baru...</p>
+
                 </div>
+
             </div>
+
+
 
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 mt-6">
-                <div class="flex justify-between items-center mb-4">
+
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 mb-4">
+
                     <h3 class="text-lg font-bold text-gray-800">Riwayat Leads Terbaru</h3>
-                    <div class="flex space-x-2">
-                        <button onclick="clearAllData()" class="bg-gray-500 hover:bg-gray-600 text-white text-xs font-bold py-2 px-4 rounded shadow-sm transition-colors flex items-center">
-                            <i class="fas fa-trash-alt mr-2"></i> Reset Data
+
+                    <div class="flex flex-wrap gap-2">
+
+                        <label class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold py-2 px-3 rounded shadow-sm cursor-pointer transition-colors">
+
+                            <i class="fas fa-file-import mr-1"></i> Import Backup
+
+                            <input type="file" id="importFile" accept=".json" class="hidden" onchange="importBackupData(this)">
+
+                        </label>
+
+                        <button onclick="exportBackupData()" class="bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold py-2 px-3 rounded shadow-sm transition-colors">
+
+                            <i class="fas fa-download mr-1"></i> Export Backup
+
                         </button>
+
                         <button onclick="exportToCSV()" class="bg-green-600 hover:bg-green-700 text-white text-xs font-bold py-2 px-4 rounded shadow-sm transition-colors flex items-center">
-                            <i class="fas fa-file-excel mr-2"></i> Export Data
+
+                            <i class="fas fa-file-excel mr-2"></i> Export CSV
+
                         </button>
+
                     </div>
+
                 </div>
+
                 
+
                 <div class="overflow-x-auto">
+
                     <table class="w-full text-left text-sm text-gray-600">
+
                         <thead class="bg-gray-50 border-b border-gray-200 text-xs uppercase font-semibold text-gray-500">
+
                             <tr>
-                                <th class="px-4 py-3">Waktu</th>
+
+                                <th class="px-4 py-3">Waktu Input</th>
+
                                 <th class="px-4 py-3">Tipe</th>
+
                                 <th class="px-4 py-3">Nama/Pelanggan</th>
+
                                 <th class="px-4 py-3">No. WA</th>
+
                                 <th class="px-4 py-3">Detail (Motor/Servis)</th>
+
                                 <th class="px-4 py-3">Sumber</th>
+
                             </tr>
+
                         </thead>
+
                         <tbody id="history-table-body" class="divide-y divide-gray-100">
+
                             <tr class="hover:bg-gray-50" id="empty-row">
+
                                 <td class="px-4 py-3 text-xs text-gray-400 text-center" colspan="6">Belum ada data di sesi ini...</td>
+
                             </tr>
+
                         </tbody>
+
                     </table>
+
                 </div>
+
             </div>
 
+
+
         </div>
+
     </div>
 
+
+
     <script>
-        // KUNCI UTAMA: Membaca data lama dari LocalStorage jika ada, jika tidak ada set ke 0
-        let dataH1 = parseInt(localStorage.getItem('dataH1')) || 0;
-        let dataH2 = parseInt(localStorage.getItem('dataH2')) || 0;
-        let sourceData = JSON.parse(localStorage.getItem('sourceData')) || {
+
+        let dataH1 = 0;
+
+        let dataH2 = 0;
+
+        let sourceData = {
+
             'Instagram': 0,
+
             'Facebook': 0,
+
             'TikTok': 0
+
         };
-        let leadsHistory = JSON.parse(localStorage.getItem('leadsHistory')) || [];
 
-        // Menampilkan angka KPI simpanan awal di layar browser
-        document.getElementById('count-h1').innerText = dataH1;
-        document.getElementById('count-h2').innerText = dataH2;
+        let leadsHistory = [];
 
-        // Inisialisasi Chart.js berdasarkan simpanan data lama
+
+
+        // Inisialisasi Chart.js
+
         const ctx = document.getElementById('trafficChart').getContext('2d');
+
         let trafficChart = new Chart(ctx, {
+
             type: 'bar',
+
             data: {
+
                 labels: ['Instagram', 'Facebook', 'TikTok / WA'],
+
                 datasets: [{
+
                     label: 'Jumlah Interaksi',
+
                     data: [sourceData['Instagram'], sourceData['Facebook'], sourceData['TikTok']],
+
                     backgroundColor: ['rgba(225, 48, 108, 0.7)', 'rgba(24, 119, 242, 0.7)', 'rgba(37, 211, 102, 0.7)'],
+
                     borderRadius: 6
+
                 }]
+
             },
+
             options: {
+
                 responsive: true,
+
                 maintainAspectRatio: false,
+
                 scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } }, x: { grid: { display: false } } },
+
                 plugins: { legend: { display: false } }
+
             }
+
         });
 
-        // Panggil fungsi render history saat pertama kali halaman dimuat
-        renderHistoryTable();
+
 
         // Logika Switch Tab Form
+
         function switchTab(tab) {
+
             const formH1 = document.getElementById('form-h1');
+
             const formH2 = document.getElementById('form-h2');
+
             const btnH1 = document.getElementById('tab-h1');
+
             const btnH2 = document.getElementById('tab-h2');
 
+
+
             if (tab === 'h1') {
+
                 formH1.classList.remove('hidden'); formH2.classList.add('hidden');
+
                 btnH1.className = "flex-1 py-3 font-bold text-hondaRed border-b-4 border-hondaRed bg-red-50 transition-all focus:outline-none";
+
                 btnH2.className = "flex-1 py-3 font-bold text-gray-400 border-b-4 border-transparent hover:bg-gray-50 transition-all focus:outline-none";
+
             } else {
+
                 formH1.classList.add('hidden'); formH2.classList.remove('hidden');
+
                 btnH2.className = "flex-1 py-3 font-bold text-ahassBlue border-b-4 border-ahassBlue bg-blue-50 transition-all focus:outline-none";
+
                 btnH1.className = "flex-1 py-3 font-bold text-gray-400 border-b-4 border-transparent hover:bg-gray-50 transition-all focus:outline-none";
+
             }
+
         }
 
-        // Fungsi Render/Menyusun isi Tabel History secara permanen
+
+
+        // Fungsi Cetak Riwayat Tabel
+
         function renderHistoryTable() {
+
             const tbody = document.getElementById('history-table-body');
+
             tbody.innerHTML = ''; 
 
+
+
             if (leadsHistory.length === 0) {
+
                 tbody.innerHTML = `
+
                     <tr class="hover:bg-gray-50" id="empty-row">
+
                         <td class="px-4 py-3 text-xs text-gray-400 text-center" colspan="6">Belum ada data di sesi ini...</td>
+
                     </tr>`;
+
                 return;
+
             }
 
-            // Tampilkan maks 10 data terakhir agar rapi
-            const displayLimit = Math.min(leadsHistory.length, 10);
-            for (let i = 0; i < displayLimit; i++) {
+
+
+            for (let i = 0; i < leadsHistory.length; i++) {
+
                 const item = leadsHistory[i];
+
                 const badgeColor = item.tipe === 'H1' ? 'bg-red-100 text-red-700' : 'bg-blue-100 text-blue-700';
+
                 
+
                 const row = `
+
                     <tr class="hover:bg-gray-50 transition-colors border-b border-gray-100">
+
                         <td class="px-4 py-3 text-xs whitespace-nowrap">${item.waktu}</td>
+
                         <td class="px-4 py-3"><span class="px-2 py-1 rounded text-xs font-bold ${badgeColor}">${item.tipe}</span></td>
+
                         <td class="px-4 py-3 font-semibold text-gray-800">${item.nama}</td>
+
                         <td class="px-4 py-3 font-mono text-xs">${item.wa}</td>
-                        <td class="px-4 py-3 text-xs truncate max-w-[150px]" title="${item.detail}">${item.detail}</td>
+
+                        <td class="px-4 py-3 text-xs truncate max-w-[250px]" title="${item.detail}">${item.detail}</td>
+
                         <td class="px-4 py-3 text-xs">${item.sumber}</td>
-                    </tr>`;
+
+                    </tr>
+
+                `;
+
                 tbody.innerHTML += row;
+
             }
+
         }
 
-        // Fungsi Menambah ke Array History dan Menguncinya ke LocalStorage
+
+
+        // Fungsi Menambah ke Array History
+
         function addToHistory(tipe, nama, wa, detail, sumber) {
+
             const now = new Date();
+
             const waktu = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) + ' WIB';
-            
+
             leadsHistory.unshift({ waktu, tipe, nama, wa, detail, sumber });
-            
-            // Kunci ke penyimpanan lokal browser
-            localStorage.setItem('leadsHistory', JSON.stringify(leadsHistory));
+
             renderHistoryTable();
+
         }
 
-        // Fungsi Update Dashboard Inti (KPI & Grafik + LocalStorage Sync)
+
+
+        // Fungsi Update Dashboard Inti (KPI & Perbaikan Pembaruan Grafik Balok)
+
         function updateDashboard(source, type, nama, wa, detail) {
-            // Update Angka & Kunci ke LocalStorage
+
             if (type === 'h1') {
-                dataH1++; 
-                document.getElementById('count-h1').innerText = dataH1;
-                localStorage.setItem('dataH1', dataH1);
+
+                dataH1++; document.getElementById('count-h1').innerText = dataH1;
+
                 document.getElementById('last-activity').innerHTML = `<span class="text-hondaRed font-bold">H1 Sales:</span> Prospek atas nama <b>${nama}</b> berhasil dicatat.`;
+
             } else {
-                dataH2++; 
-                document.getElementById('count-h2').innerText = dataH2;
-                localStorage.setItem('dataH2', dataH2);
+
+                dataH2++; document.getElementById('count-h2').innerText = dataH2;
+
                 document.getElementById('last-activity').innerHTML = `<span class="text-ahassBlue font-bold">H2 Bengkel:</span> Booking atas nama <b>${nama}</b> berhasil dicatat.`;
+
             }
 
-            // Update Kalkulasi Data Grafik
-            if (source === 'Instagram') sourceData['Instagram']++;
-            else if (source === 'Facebook') sourceData['Facebook']++;
-            else if (source === 'TikTok') sourceData['TikTok']++;
-            
-            localStorage.setItem('sourceData', JSON.stringify(sourceData));
 
-            // Perbarui visualisasi Grafik secara utuh
+
+            // Tambahkan hitungan data media sosial
+
+            if (source.includes('Instagram')) { sourceData['Instagram']++; }
+
+            else if (source.includes('Facebook')) { sourceData['Facebook']++; }
+
+            else { sourceData['TikTok']++; }
+
+            
+
+            // SINKRONISASI GRAFIK UTUH: Memperbarui tumpukan data balok Chart.js agar langsung merespon naik
+
             trafficChart.data.datasets.data = [sourceData['Instagram'], sourceData['Facebook'], sourceData['TikTok']];
+
             trafficChart.update();
 
-            // Masukkan data baru ke sistem Tabel Riwayat bawah
+
+
             addToHistory(type === 'h1' ? 'H1' : 'H2', nama, wa, detail, source);
+
         }
+
+
 
         // Event Listener Submit H1
+
         document.getElementById('form-h1').addEventListener('submit', function(e) {
+
             e.preventDefault();
+
             const nama = document.getElementById('h1-name').value;
+
+            const tanggal = document.getElementById('h1-date').value; // Tanggal Masuk Leads
+
             const sales = document.getElementById('h1-sales').value; 
+
             const wa = document.getElementById('h1-wa').value;
+
             const type = document.getElementById('h1-type').value;
+
             const source = document.getElementById('h1-source').value;
+
             
-            const detailGabunganH1 = `${type} | F/U: ${sales}`;
+
+            const detailGabunganH1 = `Tgl: ${tanggal} | Motor: ${type} | F/U: ${sales}`;
+
             updateDashboard(source, 'h1', nama, wa, detailGabunganH1);
+
             
+
             const btn = this.querySelector('button');
+
             const origTxt = btn.innerHTML;
+
             btn.innerHTML = '<i class="fas fa-check mr-2"></i>Tersimpan!';
+
             setTimeout(() => { btn.innerHTML = origTxt; this.reset(); }, 1000);
+
         });
+
+
 
         // Event Listener Submit H2
+
         document.getElementById('form-h2').addEventListener('submit', function(e) {
+
             e.preventDefault();
+
             const nama = document.getElementById('h2-name').value;
+
+            const tanggal = document.getElementById('h2-date').value; // Tanggal Masuk Leads
+
             const admin = document.getElementById('h2-admin').value; 
+
             const wa = document.getElementById('h2-wa').value;
+
             const plat = document.getElementById('h2-plat').value;
-            const tgl = document.getElementById('h2-date').value;
+
             const service = document.getElementById('h2-service').value;
+
             const source = document.getElementById('h2-source').value;
+
             
-            const detailGabunganH2 = `${plat} | Tgl: ${tgl} | ${service} | F/U: ${admin}`;
+
+            const detailGabunganH2 = `Tgl: ${tanggal} | Plat: ${plat} | Servis: ${service} | F/U: ${admin}`;
+
             updateDashboard(source, 'h2', nama, wa, detailGabunganH2);
+
             
+
             const btn = this.querySelector('button');
+
             const origTxt = btn.innerHTML;
+
             btn.innerHTML = '<i class="fas fa-check mr-2"></i>Tersimpan!';
+
             setTimeout(() => { btn.innerHTML = origTxt; this.reset(); }, 1000);
+
         });
 
-        // FUNGSI UNTUK RESET DATA DARI NOL (CLEAR LOCALSTORAGE)
-        function clearAllData() {
-            if (confirm("Apakah Anda yakin ingin menghapus seluruh data dashboard dan riwayat? Data yang sudah dihapus tidak bisa dikembalikan.")) {
-                localStorage.clear();
-                dataH1 = 0;
-                dataH2 = 0;
-                sourceData = { 'Instagram': 0, 'Facebook': 0, 'TikTok': 0 };
-                leadsHistory = [];
-                
-                document.getElementById('count-h1').innerText = 0;
-                document.getElementById('count-h2').innerText = 0;
-                document.getElementById('last-activity').innerText = "Menunggu input data baru...";
-                
-                trafficChart.data.datasets.data =;
-                trafficChart.update();
-                
-                renderHistoryTable();
+
+
+        // --- EXPORT DATA BACKUP (.JSON) ---
+
+        function exportBackupData() {
+
+            if (leadsHistory.length === 0) {
+
+                alert("Tidak ada data sesi untuk diekspor.");
+
+                return;
+
             }
+
+            const backupBundle = { dataH1, dataH2, sourceData, leadsHistory };
+
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(backupBundle));
+
+            const dlAnchor = document.createElement('a');
+
+            dlAnchor.setAttribute("href", dataStr);
+
+            dlAnchor.setAttribute("download", "Backup_Dashboard_RodaMas.json");
+
+            document.body.appendChild(dlAnchor);
+
+            dlAnchor.click();
+
+            dlAnchor.remove();
+
         }
+
+
+
+        // --- IMPORT DATA BACKUP (.JSON) ---
+
+        function importBackupData(input) {
+
+            const file = input.files;
+
+            if (!file) return;
+
+
+
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+
+                try {
+
+                    const imported = JSON.parse(e.target.result);
+
+                    dataH1 = imported.dataH1 || 0;
+
+                    dataH2 = imported.dataH2 || 0;
+
+                    sourceData = imported.sourceData || { 'Instagram': 0, 'Facebook': 0, 'TikTok': 0 };
+
+                    leadsHistory = imported.leadsHistory || [];
+
+
+
+                    // Kembalikan ke tampilan layar
+
+                    document.getElementById('count-h1').innerText = dataH1;
+
+                    document.getElementById('count-h2').innerText = dataH2;
+
+                    
+
+                    trafficChart.data.datasets.data = [sourceData['Instagram'], sourceData['Facebook'], sourceData['TikTok']];
+
+                    trafficChart.update();
+
+                    
+
+                    renderHistoryTable();
+
+                    document.getElementById('last-activity').innerText = "Data cadangan berhasil diimport!";
+
+                } catch (err) {
+
+                    alert("Gagal memuat file backup. Pastikan file berformat .json resmi.");
+
+                }
+
+            };
+
+            reader.readAsText(file);
+
+        }
+
+
 
         // FUNGSI EXPORT DATA CSV
+
         function exportToCSV() {
+
             if (leadsHistory.length === 0) {
+
                 alert("Belum ada data untuk di-export.");
+
                 return;
+
             }
 
+
+
             let csvContent = "data:text/csv;charset=utf-8,";
-            csvContent += "Waktu,Tipe(H1/H2),Nama Pelanggan,No WhatsApp,Detail Kebutuhan,Sumber Traffic\r\n";
+
+            csvContent += "Waktu Input,Tipe(H1/H2),Nama Pelanggan,No WhatsApp,Detail Kebutuhan,Sumber Traffic\r\n";
+
+
 
             leadsHistory.forEach(function(rowArray) {
+
                 let row = `"${rowArray.waktu}","${rowArray.tipe}","${rowArray.nama}","${rowArray.wa}","${rowArray.detail}","${rowArray.sumber}"`;
+
                 csvContent += row + "\r\n";
+
             });
 
+
+
             const encodedUri = encodeURI(csvContent);
+
             const link = document.createElement("a");
+
             link.setAttribute("href", encodedUri);
+
             link.setAttribute("download", "Laporan_Leads_RodaMas.csv");
+
             document.body.appendChild(link);
+
             link.click();
+
             document.body.removeChild(link);
+
         }
+
     </script>
+
 </body>
+
 </html>
