@@ -64,7 +64,7 @@
                         <select id="h1-source" required class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-hondaRed outline-none bg-white">
                             <option value="Instagram">Instagram</option>
                             <option value="Facebook">Facebook</option>
-                            <option value="TikTok">TikTok / WA Organik</option>
+                            <option value="TikTok">TikTok</option>
                         </select>
                     </div>
                     <button type="submit" class="w-full bg-hondaRed hover:bg-hondaDark text-white font-bold py-2.5 rounded-md shadow-md hover:shadow-lg transition-all text-sm mt-2">
@@ -104,7 +104,7 @@
                         <select id="h2-source" required class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-ahassBlue outline-none bg-white">
                             <option value="Instagram">Instagram</option>
                             <option value="Facebook">Facebook</option>
-                            <option value="TikTok">TikTok / WA Organik</option>
+                            <option value="TikTok">TikTok</option>
                         </select>
                     </div>
                     <button type="submit" class="w-full bg-ahassBlue hover:bg-blue-800 text-white font-bold py-2.5 rounded-md shadow-md hover:shadow-lg transition-all text-sm mt-2">
@@ -158,9 +158,14 @@
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 mt-6">
                 <div class="flex justify-between items-center mb-4">
                     <h3 class="text-lg font-bold text-gray-800">Riwayat Leads Terbaru</h3>
-                    <button onclick="exportToCSV()" class="bg-green-600 hover:bg-green-700 text-white text-xs font-bold py-2 px-4 rounded shadow-sm transition-colors flex items-center">
-                        <i class="fas fa-file-excel mr-2"></i> Export Data
-                    </button>
+                    <div class="flex space-x-2">
+                        <button onclick="clearAllData()" class="bg-gray-500 hover:bg-gray-600 text-white text-xs font-bold py-2 px-4 rounded shadow-sm transition-colors flex items-center">
+                            <i class="fas fa-trash-alt mr-2"></i> Reset Data
+                        </button>
+                        <button onclick="exportToCSV()" class="bg-green-600 hover:bg-green-700 text-white text-xs font-bold py-2 px-4 rounded shadow-sm transition-colors flex items-center">
+                            <i class="fas fa-file-excel mr-2"></i> Export Data
+                        </button>
+                    </div>
                 </div>
                 
                 <div class="overflow-x-auto">
@@ -188,17 +193,21 @@
     </div>
 
     <script>
-        // Reset Data Awal ke 0 agar bersih saat demo
-        let dataH1 = 0;
-        let dataH2 = 0;
-        let sourceData = {
+        // KUNCI UTAMA: Membaca data lama dari LocalStorage jika ada, jika tidak ada set ke 0
+        let dataH1 = parseInt(localStorage.getItem('dataH1')) || 0;
+        let dataH2 = parseInt(localStorage.getItem('dataH2')) || 0;
+        let sourceData = JSON.parse(localStorage.getItem('sourceData')) || {
             'Instagram': 0,
             'Facebook': 0,
             'TikTok': 0
         };
-        let leadsHistory = [];
+        let leadsHistory = JSON.parse(localStorage.getItem('leadsHistory')) || [];
 
-        // Inisialisasi Chart.js
+        // Menampilkan angka KPI simpanan awal di layar browser
+        document.getElementById('count-h1').innerText = dataH1;
+        document.getElementById('count-h2').innerText = dataH2;
+
+        // Inisialisasi Chart.js berdasarkan simpanan data lama
         const ctx = document.getElementById('trafficChart').getContext('2d');
         let trafficChart = new Chart(ctx, {
             type: 'bar',
@@ -219,6 +228,9 @@
             }
         });
 
+        // Panggil fungsi render history saat pertama kali halaman dimuat
+        renderHistoryTable();
+
         // Logika Switch Tab Form
         function switchTab(tab) {
             const formH1 = document.getElementById('form-h1');
@@ -237,23 +249,20 @@
             }
         }
 
-        // Fungsi Menambah ke Array History dan Render Tabel
-        function addToHistory(tipe, nama, wa, detail, sumber) {
-            const now = new Date();
-            const waktu = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) + ' WIB';
-            
-            // Masukkan data baru ke paling atas array
-            leadsHistory.unshift({ waktu, tipe, nama, wa, detail, sumber });
-
-            // Hapus row "Belum ada data" jika ada
-            const emptyRow = document.getElementById('empty-row');
-            if(emptyRow) emptyRow.remove();
-
-            // Render ulang tabel
+        // Fungsi Render/Menyusun isi Tabel History secara permanen
+        function renderHistoryTable() {
             const tbody = document.getElementById('history-table-body');
             tbody.innerHTML = ''; 
-            
-            // Tampilkan max 10 data terakhir agar rapi
+
+            if (leadsHistory.length === 0) {
+                tbody.innerHTML = `
+                    <tr class="hover:bg-gray-50" id="empty-row">
+                        <td class="px-4 py-3 text-xs text-gray-400 text-center" colspan="6">Belum ada data di sesi ini...</td>
+                    </tr>`;
+                return;
+            }
+
+            // Tampilkan maks 10 data terakhir agar rapi
             const displayLimit = Math.min(leadsHistory.length, 10);
             for (let i = 0; i < displayLimit; i++) {
                 const item = leadsHistory[i];
@@ -267,30 +276,50 @@
                         <td class="px-4 py-3 font-mono text-xs">${item.wa}</td>
                         <td class="px-4 py-3 text-xs truncate max-w-[150px]" title="${item.detail}">${item.detail}</td>
                         <td class="px-4 py-3 text-xs">${item.sumber}</td>
-                    </tr>
-                `;
+                    </tr>`;
                 tbody.innerHTML += row;
             }
         }
 
-        // Fungsi Update Dashboard Inti (KPI & Grafik)
+        // Fungsi Menambah ke Array History dan Menguncinya ke LocalStorage
+        function addToHistory(tipe, nama, wa, detail, sumber) {
+            const now = new Date();
+            const waktu = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) + ' WIB';
+            
+            leadsHistory.unshift({ waktu, tipe, nama, wa, detail, sumber });
+            
+            // Kunci ke penyimpanan lokal browser
+            localStorage.setItem('leadsHistory', JSON.stringify(leadsHistory));
+            renderHistoryTable();
+        }
+
+        // Fungsi Update Dashboard Inti (KPI & Grafik + LocalStorage Sync)
         function updateDashboard(source, type, nama, wa, detail) {
-            // Update Angka
+            // Update Angka & Kunci ke LocalStorage
             if (type === 'h1') {
-                dataH1++; document.getElementById('count-h1').innerText = dataH1;
+                dataH1++; 
+                document.getElementById('count-h1').innerText = dataH1;
+                localStorage.setItem('dataH1', dataH1);
                 document.getElementById('last-activity').innerHTML = `<span class="text-hondaRed font-bold">H1 Sales:</span> Prospek atas nama <b>${nama}</b> berhasil dicatat.`;
             } else {
-                dataH2++; document.getElementById('count-h2').innerText = dataH2;
+                dataH2++; 
+                document.getElementById('count-h2').innerText = dataH2;
+                localStorage.setItem('dataH2', dataH2);
                 document.getElementById('last-activity').innerHTML = `<span class="text-ahassBlue font-bold">H2 Bengkel:</span> Booking atas nama <b>${nama}</b> berhasil dicatat.`;
             }
 
-            // Update Grafik Bar
-            if (source.includes('Instagram')) { sourceData['Instagram']++; trafficChart.data.datasets.data = sourceData['Instagram']; }
-            else if (source.includes('Facebook')) { sourceData['Facebook']++; trafficChart.data.datasets.data = sourceData['Facebook']; }
-            else { sourceData['TikTok']++; trafficChart.data.datasets.data = sourceData['TikTok']; }
+            // Update Kalkulasi Data Grafik
+            if (source === 'Instagram') sourceData['Instagram']++;
+            else if (source === 'Facebook') sourceData['Facebook']++;
+            else if (source === 'TikTok') sourceData['TikTok']++;
+            
+            localStorage.setItem('sourceData', JSON.stringify(sourceData));
+
+            // Perbarui visualisasi Grafik secara utuh
+            trafficChart.data.datasets.data = [sourceData['Instagram'], sourceData['Facebook'], sourceData['TikTok']];
             trafficChart.update();
 
-            // PANGGIL FUNGSI HISTORY DI SINI
+            // Masukkan data baru ke sistem Tabel Riwayat bawah
             addToHistory(type === 'h1' ? 'H1' : 'H2', nama, wa, detail, source);
         }
 
@@ -298,11 +327,13 @@
         document.getElementById('form-h1').addEventListener('submit', function(e) {
             e.preventDefault();
             const nama = document.getElementById('h1-name').value;
+            const sales = document.getElementById('h1-sales').value; 
             const wa = document.getElementById('h1-wa').value;
             const type = document.getElementById('h1-type').value;
             const source = document.getElementById('h1-source').value;
             
-            updateDashboard(source, 'h1', nama, wa, type);
+            const detailGabunganH1 = `${type} | F/U: ${sales}`;
+            updateDashboard(source, 'h1', nama, wa, detailGabunganH1);
             
             const btn = this.querySelector('button');
             const origTxt = btn.innerHTML;
@@ -314,21 +345,41 @@
         document.getElementById('form-h2').addEventListener('submit', function(e) {
             e.preventDefault();
             const nama = document.getElementById('h2-name').value;
+            const admin = document.getElementById('h2-admin').value; 
             const wa = document.getElementById('h2-wa').value;
             const plat = document.getElementById('h2-plat').value;
             const tgl = document.getElementById('h2-date').value;
             const service = document.getElementById('h2-service').value;
             const source = document.getElementById('h2-source').value;
             
-            // Gabung plat, tanggal, dan servis untuk kolom detail
-            const detailGabungan = `${plat} | Tgl: ${tgl} | ${service}`;
-            updateDashboard(source, 'h2', nama, wa, detailGabungan);
+            const detailGabunganH2 = `${plat} | Tgl: ${tgl} | ${service} | F/U: ${admin}`;
+            updateDashboard(source, 'h2', nama, wa, detailGabunganH2);
             
             const btn = this.querySelector('button');
             const origTxt = btn.innerHTML;
             btn.innerHTML = '<i class="fas fa-check mr-2"></i>Tersimpan!';
             setTimeout(() => { btn.innerHTML = origTxt; this.reset(); }, 1000);
         });
+
+        // FUNGSI UNTUK RESET DATA DARI NOL (CLEAR LOCALSTORAGE)
+        function clearAllData() {
+            if (confirm("Apakah Anda yakin ingin menghapus seluruh data dashboard dan riwayat? Data yang sudah dihapus tidak bisa dikembalikan.")) {
+                localStorage.clear();
+                dataH1 = 0;
+                dataH2 = 0;
+                sourceData = { 'Instagram': 0, 'Facebook': 0, 'TikTok': 0 };
+                leadsHistory = [];
+                
+                document.getElementById('count-h1').innerText = 0;
+                document.getElementById('count-h2').innerText = 0;
+                document.getElementById('last-activity').innerText = "Menunggu input data baru...";
+                
+                trafficChart.data.datasets.data =;
+                trafficChart.update();
+                
+                renderHistoryTable();
+            }
+        }
 
         // FUNGSI EXPORT DATA CSV
         function exportToCSV() {
@@ -341,7 +392,6 @@
             csvContent += "Waktu,Tipe(H1/H2),Nama Pelanggan,No WhatsApp,Detail Kebutuhan,Sumber Traffic\r\n";
 
             leadsHistory.forEach(function(rowArray) {
-                // Gunakan quote (") agar comma di dalam text tidak memecah kolom excel
                 let row = `"${rowArray.waktu}","${rowArray.tipe}","${rowArray.nama}","${rowArray.wa}","${rowArray.detail}","${rowArray.sumber}"`;
                 csvContent += row + "\r\n";
             });
